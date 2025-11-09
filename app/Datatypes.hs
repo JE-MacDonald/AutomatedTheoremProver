@@ -1,7 +1,8 @@
-module Formula where
+module Datatypes where
 
 data Term
     = Variable String
+    | Object String
     | Function String [Term]
     deriving (Eq, Show)
 
