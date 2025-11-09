@@ -1,13 +1,16 @@
 Automated Theorem Prover for First-Order Logic
 
 Input: 
+
 	A text file containing one formula F.
 
 Output: 
+
 	If F is valid, VALID.
 	If F is invalid, the program may terminate or run forever.
 
 Input formatting:
+
 	Term Keywords:
 		VAR[name]
 			Variable called "name".
