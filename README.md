@@ -46,7 +46,7 @@ Input formatting:
 		Whitespace doesn't matter. Feel free to put newlines and spaces anywhere other than in the middle of a name or keyword string.
 		If your input is not well-formed, the parser should fail with "Bad formula/term keyword: k". Where k is some unexpected string.
 
-Example input:
-	IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) )
+	Example input:
+		IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) )
 
-	This says "If everyone is friends with Bob, then someone is friends with Bob."
+		This says "If everyone is friends with Bob, then someone is friends with Bob."
