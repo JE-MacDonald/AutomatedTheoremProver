@@ -2,6 +2,7 @@ module Main where
 
 import Datatypes
 import Parser
+import Renamer
 import qualified Text.Megaparsec as MP
 
 main :: IO ()
@@ -15,4 +16,4 @@ main = do
         Left e -> putStrLn(MP.errorBundlePretty e)
         Right formula -> do 
             let x = formula :: Formula --just messing with syntax
-            print x
+            print (renameFormula x)

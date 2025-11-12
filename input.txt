@@ -1,1 +1,2 @@
-IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) )
+AND ( IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) ) 
+OR( A{person}( PRED[areFriends]( VAR[person] FUNC[friend](VAR[person]) ) ) PRED[isCool]( VAR [person] ) ) )
