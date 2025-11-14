@@ -44,7 +44,7 @@ Input formatting:
 	Notes on Syntax:
 		Names are strictly strings of uppercase and lowercase alphabet characters.
 		Whitespace doesn't matter. Feel free to put newlines and spaces anywhere other than in the middle of a name or keyword string.
-		If your input is not well-formed, the parser should fail with "Bad formula/term keyword: k". Where k is some unexpected string.
+		If your input is not well-formed, the program should fail with some error message.
 
 	Example input:
 		IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) )
