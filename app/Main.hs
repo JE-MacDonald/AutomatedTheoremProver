@@ -3,7 +3,7 @@ module Main where
 import Datatypes
 import Parser
 import Renamer
-import CNF_Converter
+import ClausalFormConverter
 import qualified Text.Megaparsec as MP
 
 main :: IO ()

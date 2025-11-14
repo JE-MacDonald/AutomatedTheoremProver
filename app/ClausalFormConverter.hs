@@ -1,4 +1,4 @@
-module CNF_Converter (convertToCNF) where
+module ClausalFormConverter (convertToCNF) where
 
 import Datatypes
 
