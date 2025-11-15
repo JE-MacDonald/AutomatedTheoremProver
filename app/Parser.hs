@@ -84,7 +84,7 @@ pFormula = do
         
         _           -> fail $ "Bad formula keyword: " ++ keyword
            
---public funtion that converts a well-formed formula strings into a Formula
+-- public funtion that converts a well-formed formula strings into a Formula
 inputStringToFormula :: String -> Either (MP.ParseErrorBundle String Void.Void) Formula 
 inputStringToFormula = MP.parse (spaceConsumer *> pFormula) ""
 
