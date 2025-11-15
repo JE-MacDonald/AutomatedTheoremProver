@@ -23,5 +23,5 @@ data Formula
 data Literal 
     = Pos String [Term]  --predicate
     | Neg String [Term]  --not(predicate)
-newtype Clause = Clause [Literal]
-newtype ClausalForm = ClausalForm [Clause]
+type Clause = [Literal]
+type ClausalForm = [Clause]
