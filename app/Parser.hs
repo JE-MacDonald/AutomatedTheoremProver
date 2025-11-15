@@ -86,5 +86,5 @@ pFormula = do
            
 --public funtion that converts a well-formed formula strings into a Formula
 inputStringToFormula :: String -> Either (MP.ParseErrorBundle String Void.Void) Formula 
-inputStringToFormula = MP.parse pFormula ""
+inputStringToFormula = MP.parse (spaceConsumer *> pFormula) ""
 
