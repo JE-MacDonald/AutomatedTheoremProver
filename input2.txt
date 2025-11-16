@@ -1,0 +1,13 @@
+ AND 
+( 
+	IMPLIES
+	(
+		PRED[a]( ) 
+		PRED[b]( ) 
+	)
+	
+	NOT
+	(
+		PRED[c]( )
+	)
+)

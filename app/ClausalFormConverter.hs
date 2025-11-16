@@ -59,15 +59,13 @@ tseitinRec :: Formula -> (Word16, Word16) -> (String, [Term], ClausalForm)
 tseitinRec f (minName, maxName) = 
     let name = "{["++show maxName++"]}" in
     case f of
-        Top ->      --(create 0-ary preds p and q and say (p | q) where q = ~p)
+        Top ->      --create 0-ary pred p and say (p | ~p)
             let p = Predicate "{[Tp]}" [] in
-            let q = Predicate "{[Tq]}" [] in
-            (name, [], toCNF (Iff q (Not p)) ++ toCNF (Iff (Predicate name []) (Or p q)))
+            tseitinRec (Or p (Not p)) (minName, maxName) 
 
-        Bottom ->   --(create 0-ary preds p and q and say (p & q) where q = ~p)
+        Bottom ->   --create 0-ary pred p and say (p & ~p)
             let p = Predicate "{[Bp]}" [] in
-            let q = Predicate "{[Bq]}" [] in
-            (name, [], toCNF (Iff q (Not p)) ++ toCNF (Iff (Predicate name []) (And p q)))
+            tseitinRec (And p (Not p)) (minName, maxName) 
 
         Predicate np tp -> 
             ("{["++np++"]}", tp, [])
@@ -78,7 +76,7 @@ tseitinRec f (minName, maxName) =
             let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
-            (name, [], cx ++ cy ++ toCNF (Iff (Predicate name []) (And p q) ))
+            (name, [], toCNF (Iff (Predicate name []) (And p q) ) ++ cx ++ cy)
 
         Or x y -> 
             let mid = Bit.shiftR maxName 1 in
@@ -86,12 +84,12 @@ tseitinRec f (minName, maxName) =
             let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
-            (name, [], cx ++ cy ++ toCNF (Iff (Predicate name []) (Or p q) ))
+            (name, [], toCNF (Iff (Predicate name []) (Or p q) ) ++ cx ++ cy)
 
         Not x ->
             let (nx, tx, cx) = tseitinRec x (minName, maxName - 1) in
             let p = Predicate nx tx in
-            (name, [], cx ++ toCNF (Iff (Predicate name []) (Not p) ))
+            (name, [], toCNF (Iff (Predicate name []) (Not p) ) ++ cx)
 
         Implies x y -> 
             let mid = Bit.shiftR maxName 1 in
@@ -99,7 +97,7 @@ tseitinRec f (minName, maxName) =
             let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
-            (name, [], cx ++ cy ++ toCNF (Iff (Predicate name []) (Implies p q) ))
+            (name, [], toCNF (Iff (Predicate name []) (Implies p q) ) ++ cx ++ cy)
 
         Iff x y ->
             let mid = Bit.shiftR maxName 1 in
@@ -107,7 +105,7 @@ tseitinRec f (minName, maxName) =
             let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
-            (name, [], cx ++ cy ++ toCNF (Iff (Predicate name []) (Iff p q) ))
+            (name, [], toCNF (Iff (Predicate name []) (Iff p q) ) ++ cx ++ cy )
 
         _ -> error "Unexpected Quantifier"
 

@@ -11,10 +11,14 @@ main = do
     --go thru the steps of FO resolution and then refutation by calling
     --funcs from modules (ie, PNF conversion module, skolem module, etc)
 
-    --test for Parser.hs
-    input <- readFile "input.txt"
+    --test for ClausalFormConverter
+    input <- readFile "input2.txt"
     case inputStringToFormula input of
         Left e -> putStrLn(MP.errorBundlePretty e)
         Right formula -> do 
-            let x = formula :: Formula --just messing with syntax
-            print (convertToClausalForm (renameFormula x))
+            let q = renameFormula formula
+            let x = convertToClausalForm q
+            print (show q)
+            putStrLn ""
+            putStrLn (unlines (map show x))
+
