@@ -7,6 +7,8 @@ nnfBinary :: (Formula -> Formula -> Formula) -> (Formula, Bool) -> (Formula, Boo
 nnfBinary t (a, negateA) (b, negateB) =
     t (nnfHelper a negateA) (nnfHelper b negateB)
 
+-- Looks "complicated", but basically does the negation formulae shown in the slides from class
+-- Also removes any implications and iffs
 -- Parameters: formula to do NNF on, whether it should negate or not
 nnfHelper :: Formula -> Bool -> Formula
 nnfHelper Top True = Bottom
@@ -31,7 +33,7 @@ nnfHelper (Implies a b) False = nnfBinary Or (a, True) (b, False)
 nnfHelper (Iff a b) True = Or (nnfBinary And (a, False) (b, True)) (nnfBinary And (a, True) (b, False))
 nnfHelper (Iff a b) False = Or (nnfBinary And (a, True) (b, True)) (nnfBinary And (a, False) (b, False))
 
-nnfHelper (Not f) negate = nnfHelper f (not negate)
+nnfHelper (Not f) isNegated = nnfHelper f (not isNegated)
 
 nnfHelper (ForAll name f) True = ThereExists name (nnfHelper f True)
 nnfHelper (ForAll name f) False = ForAll name (nnfHelper f False)

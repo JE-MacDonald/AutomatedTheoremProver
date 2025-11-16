@@ -66,6 +66,7 @@ executable project
                       Renamer
                       ClausalFormConverter
                       NegationNormalForm
+                      MoveQuantifiers
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
