@@ -17,4 +17,4 @@ main = do
         Left e -> putStrLn(MP.errorBundlePretty e)
         Right formula -> do 
             let x = formula :: Formula --just messing with syntax
-            print (renameFormula x)
+            print (convertToClausalForm (renameFormula x))

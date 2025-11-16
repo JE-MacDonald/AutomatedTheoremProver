@@ -4,6 +4,7 @@ module ClausalFormConverter (convertToClausalForm) where
 
 import Datatypes
 import Data.Word
+import qualified Data.Bits as Bit (shiftR)
 
 --get the unquantified inner Formula from a skolemized Formula
 removeUniversalQuantifiers :: Formula -> Formula
@@ -52,82 +53,69 @@ Perform Tseitin's Transformation on f to get a CNF formula.
 We use "{[.]}" as names for new predicates because nothing can
 have a name of this form as it would have broken the parser.
 The argument range says what names can be given to new vars in
-the current scope. Names are Word8 numbers (only 256 names!).
+the current scope. Names are Word16 numbers (2^16 possible names).
 -}
-tseitinRec :: Formula -> (Word8, Word8) -> (String, ClausalForm)
+tseitinRec :: Formula -> (Word16, Word16) -> (String, [Term], ClausalForm)
 tseitinRec f (minName, maxName) = 
     let name = "{["++show maxName++"]}" in
     case f of
-        Top -> 
-            ("{[T]}", [])
-        Bottom -> 
-            ("{[B]}", [[Pos "{[p]}" [Object "{[o]}"]], [Neg "{[p]}" [Object "{[o]}"]]])
+        Top ->      --(create 0-ary preds p and q and say (p | q) where q = ~p)
+            let p = Predicate "{[Tp]}" [] in
+            let q = Predicate "{[Tq]}" [] in
+            (name, [], toCNF (Iff q (Not p)) ++ toCNF (Iff (Predicate name []) (Or p q)))
+
+        Bottom ->   --(create 0-ary preds p and q and say (p & q) where q = ~p)
+            let p = Predicate "{[Bp]}" [] in
+            let q = Predicate "{[Bq]}" [] in
+            (name, [], toCNF (Iff q (Not p)) ++ toCNF (Iff (Predicate name []) (And p q)))
+
         Predicate np tp -> 
-            ("{["++np++"]}", [[Pos np tp]])
-        And x y -> case (x, y) of
-            (Predicate np tp, Predicate nq tq) -> 
-                ("{[]}", toCNF (Iff (Predicate name []) f))
+            ("{["++np++"]}", tp, [])
 
+        And x y -> 
+            let mid = Bit.shiftR maxName 1 in
+            let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
+            let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
+            let p = Predicate nx tx in
+            let q = Predicate ny ty in
+            (name, [], cx ++ cy ++ toCNF (Iff (Predicate name []) (And p q) ))
 
+        Or x y -> 
+            let mid = Bit.shiftR maxName 1 in
+            let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
+            let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
+            let p = Predicate nx tx in
+            let q = Predicate ny ty in
+            (name, [], cx ++ cy ++ toCNF (Iff (Predicate name []) (Or p q) ))
 
+        Not x ->
+            let (nx, tx, cx) = tseitinRec x (minName, maxName - 1) in
+            let p = Predicate nx tx in
+            (name, [], cx ++ toCNF (Iff (Predicate name []) (Not p) ))
 
-            _ -> error ""
-            
-        _ -> error ""
+        Implies x y -> 
+            let mid = Bit.shiftR maxName 1 in
+            let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
+            let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
+            let p = Predicate nx tx in
+            let q = Predicate ny ty in
+            (name, [], cx ++ cy ++ toCNF (Iff (Predicate name []) (Implies p q) ))
+
+        Iff x y ->
+            let mid = Bit.shiftR maxName 1 in
+            let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
+            let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
+            let p = Predicate nx tx in
+            let q = Predicate ny ty in
+            (name, [], cx ++ cy ++ toCNF (Iff (Predicate name []) (Iff p q) ))
+
+        _ -> error "Unexpected Quantifier"
 
 --master tseitin func
 tseitinsTransf :: Formula -> ClausalForm
 tseitinsTransf f = 
-    let (rootName, clauses) = tseitinRec f (0, -1) in
-    [Pos ("{["++rootName++"]}") []] : clauses
-
-{-
---does not use Tseitin's Transformation -> exponential increase in formula size
---also simplify things like And(True, x)
-formulaToCNF :: Formula -> Int -> Formula
-formulaToCNF f count = case f of
-    Top                     -> f
-    Bottom                  -> f
-    Predicate _ _           -> f
-    And x y ->  
-        let x' = formulaToCNF x in
-        let y' = formulaToCNF y in
-        case (x', y') of
-            (Top, z)    -> z
-            (z, Top)    -> z
-            (Bottom, _) -> Bottom
-            (_, Bottom) -> Bottom
-            _           -> And x' y'
-    Or x y ->
-        let x' = formulaToCNF x in
-        let y' = formulaToCNF y in
-        case (x', y') of
-            (Top, _)    -> Top
-            (_, Top)    -> Top
-            (Bottom, z) -> z
-            (z, Bottom) -> z
-            _           -> Or x' y'
-    Not g -> 
-        case g of 
-            Predicate _ _   -> Not g
-            And x y         -> Or (formulaToCNF (Not x)) (formulaToCNF (Not y))
-
-            
-    Implies     -> Formula Formula
-    Iff         -> Formula Formula
-    ForAll      -> String Formula
-    ThereExists -> String Formula
--}
-{-
-Assumes that the Formula is in the form
-  (a | b | ...) & ... & (x | y | ...)
-Note: in the Formula AST syntax, a clause can take 4 forms
-  Or(Or(...), x)
-  Or(x, Or(...))
-  Or(Or(...), Or(...))
-  Or(x,y)
-And similarly for And in a CNF Formula AST
--}
+    let (rootName, rootTerms, clauses) = tseitinRec f (0, -1) in
+    [Pos rootName rootTerms] : clauses
 
 convertToClausalForm :: Formula -> ClausalForm
 convertToClausalForm f = tseitinsTransf (removeUniversalQuantifiers f)

@@ -23,6 +23,7 @@ data Formula
 data Literal 
     = Pos String [Term]  --predicate
     | Neg String [Term]  --not(predicate)
+    deriving (Show)
 type Clause = [Literal]
 type ClausalForm = [Clause]
 
