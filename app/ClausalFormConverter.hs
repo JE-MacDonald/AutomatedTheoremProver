@@ -50,25 +50,24 @@ toCNF f = case f of
 
 {-
 Perform Tseitin's Transformation on f to get a CNF formula.
-We use "{[.]}" as names for new predicates because nothing can
-have a name of this form as it would have broken the parser.
+Use numbers as names because user can only use alphabet strings.
 The argument range says what names can be given to new vars in
 the current scope. Names are Word16 numbers (2^16 possible names).
 -}
 tseitinRec :: Formula -> (Word16, Word16) -> (String, [Term], ClausalForm)
 tseitinRec f (minName, maxName) = 
-    let name = "{["++show maxName++"]}" in
+    let name = show maxName in
     case f of
         Top ->      --create 0-ary pred p and say (p | ~p)
-            let p = Predicate "{[Tp]}" [] in
+            let p = Predicate "+" [] in
             tseitinRec (Or p (Not p)) (minName, maxName) 
 
         Bottom ->   --create 0-ary pred p and say (p & ~p)
-            let p = Predicate "{[Bp]}" [] in
+            let p = Predicate "-" [] in
             tseitinRec (And p (Not p)) (minName, maxName) 
 
         Predicate np tp -> 
-            ("{["++np++"]}", tp, [])
+            (np, tp, [])
 
         And x y -> 
             let mid = Bit.shiftR maxName 1 in
