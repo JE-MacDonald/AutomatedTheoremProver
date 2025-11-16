@@ -67,6 +67,7 @@ executable project
                       ClausalFormConverter
                       NegationNormalForm
                       MoveQuantifiers
+                      FreeVariables
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
