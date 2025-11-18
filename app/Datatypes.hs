@@ -38,8 +38,8 @@ instance Show Formula where
     show (Top) = "True"
     show (Bottom) = "False"
     show (Predicate name terms) = name ++ (show terms)
-    show (And a b) = "(" ++ (show a) ++ ") ^ (" ++ (show b) ++ ")"
-    show (Or a b) = "(" ++ (show a) ++ ") v (" ++ (show b) ++ ")"
+    show (And a b) = "(" ++ (show a) ++ ") && (" ++ (show b) ++ ")"
+    show (Or a b) = "(" ++ (show a) ++ ") || (" ++ (show b) ++ ")"
     show (Implies a b) = "(" ++ (show a) ++ ") -> (" ++ (show b) ++ ")"
     show (Iff a b) = "(" ++ (show a) ++ ") <-> (" ++ (show b) ++ ")"
     show (ForAll name a) = "A " ++ ( name) ++ " . (" ++ (show a) ++ ")"
