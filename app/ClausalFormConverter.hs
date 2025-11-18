@@ -58,13 +58,11 @@ tseitinRec :: Formula -> (Word16, Word16) -> (String, [Term], ClausalForm)
 tseitinRec f (minName, maxName) = 
     let name = show minName in
     case f of
-        Top ->      --create 0-ary pred p and say (p | ~p)
-            let p = Predicate "+" [] in
-            tseitinRec (Or p (Not p)) (minName, maxName) 
+        Top ->
+            ("+", [], [[Pos "+" []]])
 
-        Bottom ->   --create 0-ary pred p and say (p & ~p)
-            let p = Predicate "-" [] in
-            tseitinRec (And p (Not p)) (minName, maxName) 
+        Bottom ->
+            ("-", [], [[Neg "-" []]])
 
         Predicate np tp -> 
             (np, tp, [])
