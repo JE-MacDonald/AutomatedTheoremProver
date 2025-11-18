@@ -70,7 +70,7 @@ tseitinRec f (minName, maxName) =
             (np, tp, [])
 
         And x y -> 
-            let mid = Bit.shiftR maxName 1 in
+            let mid = minName + Bit.shiftR (maxName - minName) 1 in
             let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
             let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
             let p = Predicate nx tx in
@@ -78,7 +78,7 @@ tseitinRec f (minName, maxName) =
             (name, [], toCNF (Iff (Predicate name []) (And p q) ) ++ cx ++ cy)
 
         Or x y -> 
-            let mid = Bit.shiftR maxName 1 in
+            let mid = minName + Bit.shiftR (maxName - minName) 1 in
             let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
             let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
             let p = Predicate nx tx in
@@ -91,7 +91,7 @@ tseitinRec f (minName, maxName) =
             (name, [], toCNF (Iff (Predicate name []) (Not p) ) ++ cx)
 
         Implies x y -> 
-            let mid = Bit.shiftR maxName 1 in
+            let mid = minName + Bit.shiftR (maxName - minName) 1 in
             let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
             let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
             let p = Predicate nx tx in
@@ -99,7 +99,7 @@ tseitinRec f (minName, maxName) =
             (name, [], toCNF (Iff (Predicate name []) (Implies p q) ) ++ cx ++ cy)
 
         Iff x y ->
-            let mid = Bit.shiftR maxName 1 in
+            let mid = minName + Bit.shiftR (maxName - minName) 1 in
             let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
             let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
             let p = Predicate nx tx in
