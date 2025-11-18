@@ -56,7 +56,7 @@ the current scope. Names are Word16 numbers (2^16 possible names).
 -}
 tseitinRec :: Formula -> (Word16, Word16) -> (String, [Term], ClausalForm)
 tseitinRec f (minName, maxName) = 
-    let name = show maxName in
+    let name = show minName in
     case f of
         Top ->      --create 0-ary pred p and say (p | ~p)
             let p = Predicate "+" [] in
@@ -71,37 +71,37 @@ tseitinRec f (minName, maxName) =
 
         And x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
-            let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
-            let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x (minName+1, mid) in
+            let (ny, ty, cy) = tseitinRec y (mid+1, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
             (name, [], toCNF (Iff (Predicate name []) (And p q) ) ++ cx ++ cy)
 
         Or x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
-            let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
-            let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x (minName+1, mid) in
+            let (ny, ty, cy) = tseitinRec y (mid+1, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
             (name, [], toCNF (Iff (Predicate name []) (Or p q) ) ++ cx ++ cy)
 
         Not x ->
-            let (nx, tx, cx) = tseitinRec x (minName, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x (minName+1, maxName) in
             let p = Predicate nx tx in
             (name, [], toCNF (Iff (Predicate name []) (Not p) ) ++ cx)
 
         Implies x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
-            let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
-            let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x (minName+1, mid) in
+            let (ny, ty, cy) = tseitinRec y (mid+1, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
             (name, [], toCNF (Iff (Predicate name []) (Implies p q) ) ++ cx ++ cy)
 
         Iff x y ->
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
-            let (nx, tx, cx) = tseitinRec x (minName, mid - 1) in
-            let (ny, ty, cy) = tseitinRec y (mid, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x (minName+1, mid) in
+            let (ny, ty, cy) = tseitinRec y (mid+1, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
             (name, [], toCNF (Iff (Predicate name []) (Iff p q) ) ++ cx ++ cy )
