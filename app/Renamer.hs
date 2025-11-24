@@ -28,7 +28,7 @@ renameBinary t a b nameDict dict =
 
 -- Handles renaming quantifiers
 -- Renames the quantified variable to (Number of times this variable name has been seen in quantifiers)_(Variable name)
--- Keeps track of if the variable is quantified, and if it has already been quantified before the call it errors
+-- Maintains a master list of all encountered variable names and its counts, as well as a local copy for mapping (must be local to respect scope)
 -- Parameters: Quantifier type, name of variable quantified, formula, name list, mapping
 renameQuantifier :: (String -> Formula -> Formula) -> String -> Formula -> Map String Int -> Map String Int -> (Map String Int, Formula)
 renameQuantifier t name formula nameDict dict =
