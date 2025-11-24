@@ -1,1 +1,1 @@
-A {x} ( IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) ) )
+IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) )

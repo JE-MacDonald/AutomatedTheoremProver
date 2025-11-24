@@ -26,7 +26,6 @@ data Literal
 type Clause = [Literal]
 type ClausalForm = [Clause]
 
-
 -- Neater prints, not required though
 instance Show Term where
     show (Variable name) = name
