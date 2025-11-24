@@ -1,0 +1,12 @@
+AND
+(
+    A {x} ( TRUE )
+    E {y} (
+        OR
+        (
+            PRED[compatible]( VAR[y] VAR[y] )
+            NOT( PRED[compatible]( VAR[y] VAR[y] ) )
+        )
+    )
+)
+

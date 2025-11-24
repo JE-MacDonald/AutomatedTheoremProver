@@ -1,0 +1,8 @@
+E {message} (
+    IFF
+    (
+        PRED[signed]( VAR[message] )
+        PRED[signed]( VAR[message] )
+    )
+)
+

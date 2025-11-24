@@ -1,0 +1,8 @@
+A {x} (
+    OR
+    (
+        PRED[likes]( VAR[x] OBJ[IceCream] )
+        NOT( PRED[likes]( VAR[x] OBJ[IceCream] ) )
+    )
+)
+

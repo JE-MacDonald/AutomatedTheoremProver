@@ -1,0 +1,9 @@
+E {x} (
+    A {y} (
+        OR
+        (
+            PRED[knows]( VAR[y] VAR[y] )
+            NOT( PRED[knows]( VAR[y] VAR[y] ) )
+        )
+    )
+)
