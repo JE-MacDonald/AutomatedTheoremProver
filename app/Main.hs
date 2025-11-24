@@ -9,6 +9,7 @@ import FreeVariables (freeVariables)
 import NegationNormalForm (nnfConverter)
 import MoveQuantifiers (moveQuantifiers)
 import Skolemize (skolemize)
+import Resolution (resolution)
 
 main :: IO ()
 main = do
@@ -45,3 +46,7 @@ main = do
             putStrLn "\nSteps 4&5: CNF and Clausal Form:"
             putStrLn (unlines (map show clausalFormula))
 
+            let result = resolution clausalFormula
+            if result
+                then putStrLn "Valid!"
+                else putStrLn "Invalid!"

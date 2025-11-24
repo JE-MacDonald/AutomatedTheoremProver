@@ -4,7 +4,7 @@ data Term
     = Variable String
     | Object String
     | Function String [Term]
-    deriving (Eq)
+    deriving (Eq, Ord)
 
 data Formula
     = Top     --true
@@ -23,6 +23,7 @@ data Formula
 data Literal 
     = Pos String [Term]  --predicate
     | Neg String [Term]  --not(predicate)
+    deriving (Eq, Ord)
 type Clause = [Literal]
 type ClausalForm = [Clause]
 
