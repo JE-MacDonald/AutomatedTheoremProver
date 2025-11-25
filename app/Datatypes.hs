@@ -23,7 +23,7 @@ data Formula
 data Literal 
     = Pos String [Term]  --predicate
     | Neg String [Term]  --not(predicate)
-    deriving (Eq, Ord)
+    deriving (Eq, Ord, Show)
 type Clause = [Literal]
 type ClausalForm = [Clause]
 
@@ -37,14 +37,10 @@ instance Show Formula where
     show (Top) = "True"
     show (Bottom) = "False"
     show (Predicate name terms) = name ++ (show terms)
-    show (And a b) = "(" ++ (show a) ++ ") ∧ (" ++ (show b) ++ ")"
-    show (Or a b) = "(" ++ (show a) ++ ") ∨ (" ++ (show b) ++ ")"
+    show (And a b) = "(" ++ (show a) ++ ") || (" ++ (show b) ++ ")"
+    show (Or a b) = "(" ++ (show a) ++ ") && (" ++ (show b) ++ ")"
     show (Implies a b) = "(" ++ (show a) ++ ") -> (" ++ (show b) ++ ")"
     show (Iff a b) = "(" ++ (show a) ++ ") <-> (" ++ (show b) ++ ")"
-    show (ForAll name a) = "∀ " ++ ( name) ++ ". (" ++ (show a) ++ ")"
-    show (ThereExists name a) = "∃ " ++ ( name) ++ ". (" ++ (show a) ++ ")"
-    show (Not a) = "¬(" ++ (show a) ++ ")"
-
-instance Show Literal where
-    show (Pos name terms) = name ++ (show terms)
-    show (Neg name terms) = "¬" ++ name ++ (show terms)
+    show (ForAll name a) = "A{" ++ (name) ++ "}.(" ++ (show a) ++ ")"
+    show (ThereExists name a) = "E{" ++ (name) ++ "}.(" ++ (show a) ++ ")"
+    show (Not a) = "~(" ++ (show a) ++ ")"
