@@ -7,11 +7,12 @@ import Data.Word
 import qualified Data.Bits as Bit (shiftR)
 
 --get the unquantified inner Formula from a skolemized Formula
-removeUniversalQuantifiers :: Formula -> Formula
-removeUniversalQuantifiers f = 
+--and get a list of the quantified variables
+removeUniversalQuantifiers :: Formula -> [Term] -> (Formula, [Term])
+removeUniversalQuantifiers f qvars = 
     case f of
-        ForAll _ g -> removeUniversalQuantifiers g
-        _ -> f
+        ForAll x g -> removeUniversalQuantifiers g (Variable x : qvars)
+        _ -> (f, qvars)
 
 --Tseitin's helper. Expects f: Iff(v g) where v is atomic and g is almost atomic.
 -- i.e. g = And(p q), Or(p q), Not(p), Implies(p q), Iff(p q)
@@ -54,8 +55,8 @@ Use numbers as names because user can only use alphabet strings.
 The argument range says what names can be given to new vars in
 the current scope. Names are Word16 numbers (2^16 possible names).
 -}
-tseitinRec :: Formula -> (Word16, Word16) -> (String, [Term], ClausalForm)
-tseitinRec f (minName, maxName) = 
+tseitinRec :: Formula -> [Term] -> (Word16, Word16) -> (String, [Term], ClausalForm)
+tseitinRec f qvars (minName, maxName) = 
     let name = show minName in
     case f of
         Top ->
@@ -69,48 +70,48 @@ tseitinRec f (minName, maxName) =
 
         And x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
-            let (nx, tx, cx) = tseitinRec x (minName+1, mid) in
-            let (ny, ty, cy) = tseitinRec y (mid+1, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x qvars (minName+1, mid) in
+            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
-            (name, [], toCNF (Iff (Predicate name []) (And p q) ) ++ cx ++ cy)
+            (name, qvars, toCNF (Iff (Predicate name qvars) (And p q) ) ++ cx ++ cy)
 
         Or x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
-            let (nx, tx, cx) = tseitinRec x (minName+1, mid) in
-            let (ny, ty, cy) = tseitinRec y (mid+1, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x qvars (minName+1, mid) in
+            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
-            (name, [], toCNF (Iff (Predicate name []) (Or p q) ) ++ cx ++ cy)
+            (name, qvars, toCNF (Iff (Predicate name qvars) (Or p q) ) ++ cx ++ cy)
 
         Not x ->
-            let (nx, tx, cx) = tseitinRec x (minName+1, maxName) in
+            let (nx, tx, cx) = tseitinRec x qvars (minName+1, maxName) in
             let p = Predicate nx tx in
-            (name, [], toCNF (Iff (Predicate name []) (Not p) ) ++ cx)
+            (name, qvars, toCNF (Iff (Predicate name qvars) (Not p) ) ++ cx)
 
         Implies x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
-            let (nx, tx, cx) = tseitinRec x (minName+1, mid) in
-            let (ny, ty, cy) = tseitinRec y (mid+1, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x qvars (minName+1, mid) in
+            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
-            (name, [], toCNF (Iff (Predicate name []) (Implies p q) ) ++ cx ++ cy)
+            (name, qvars, toCNF (Iff (Predicate name qvars) (Implies p q) ) ++ cx ++ cy)
 
         Iff x y ->
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
-            let (nx, tx, cx) = tseitinRec x (minName+1, mid) in
-            let (ny, ty, cy) = tseitinRec y (mid+1, maxName - 1) in
+            let (nx, tx, cx) = tseitinRec x qvars (minName+1, mid) in
+            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName - 1) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
-            (name, [], toCNF (Iff (Predicate name []) (Iff p q) ) ++ cx ++ cy )
+            (name, qvars, toCNF (Iff (Predicate name qvars) (Iff p q) ) ++ cx ++ cy )
 
         _ -> error "Unexpected Quantifier"
 
 --master tseitin func
-tseitinsTransf :: Formula -> ClausalForm
-tseitinsTransf f = 
-    let (rootName, rootTerms, clauses) = tseitinRec f (0, -1) in
+tseitinsTransf :: (Formula, [Term]) -> ClausalForm
+tseitinsTransf (f, qvars) = 
+    let (rootName, rootTerms, clauses) = tseitinRec f qvars (0, -1) in
     [Pos rootName rootTerms] : clauses
 
 convertToClausalForm :: Formula -> ClausalForm
-convertToClausalForm f = tseitinsTransf (removeUniversalQuantifiers f)
+convertToClausalForm f = tseitinsTransf (removeUniversalQuantifiers f [])
