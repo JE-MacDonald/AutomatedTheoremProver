@@ -13,6 +13,7 @@ import Datatypes
 type Subst = Map String Term
 
 resolution :: ClausalForm -> Bool
+resolution _ = True
 --Given the list of clauses in clausal form, do resolution logic.
 --Start by ensuring variables are distinct in each clause. (No shared variables in separate clauses -> slide 38 in 7-Resolution.pdf)
 --For unification, can use Robinson's algorithm, or Martelli and Montanari algorithm, etc.
