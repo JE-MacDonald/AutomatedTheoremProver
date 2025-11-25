@@ -9,11 +9,16 @@ import FreeVariables (freeVariables)
 import NegationNormalForm (nnfConverter)
 import MoveQuantifiers (moveQuantifiers)
 import Skolemize (skolemize)
+import Resolution (resolution)
 
 main :: IO ()
 main = do
     --First-order resolution
+<<<<<<< HEAD
     input <- readFile "input4.txt"
+=======
+    input <- readFile "test2.txt"
+>>>>>>> cf08807ae07747be9874882455e74453dbbab60f
     case inputStringToFormula input of
         Left e -> putStrLn(MP.errorBundlePretty e)
         Right formula -> do 
@@ -45,3 +50,7 @@ main = do
             putStrLn "\nSteps 4&5: CNF and Clausal Form:"
             putStrLn (unlines (map show clausalFormula))
 
+            let result = resolution clausalFormula
+            if result
+                then putStrLn "Valid!"
+                else putStrLn "Invalid!"

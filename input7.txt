@@ -1,0 +1,12 @@
+A {x} (
+    IMPLIES
+    (
+        AND
+        (
+            PRED[mentor]( VAR[x] VAR[x] )
+            PRED[teaches]( VAR[x] VAR[x] )
+        )
+        PRED[mentor]( VAR[x] VAR[x] )
+    )
+)
+

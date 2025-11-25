@@ -16,10 +16,6 @@ skolemize f = fst (go f [] 0)
 --  list of universally quantified variables in scope, 
 --  count of current skolem functions
 go :: Formula -> [String] -> Int -> (Formula, Int)
-go Top _ n    = (Top, n)
-go Bottom _ n = (Bottom, n)
-
-go (Predicate name terms) _ n = (Predicate name terms, n)
 
 go (And p q) uni n =
     let 
@@ -60,10 +56,11 @@ go (ThereExists x p) uni n =
     in
         go pSub uni (n + 1)
 
+-- Handles the rest
+go x _ n = (x, n)
+
 -- Replaces variable y with function term f in formula
 substitute :: String -> Term -> Formula -> Formula
-substitute y f Top = Top
-substitute y f Bottom = Bottom
 
 substitute y f (Predicate name terms) = Predicate name (map (subTerm y f) terms)
 
@@ -79,6 +76,9 @@ substitute y f (ForAll x p)
 substitute y f (ThereExists x p)
     | x == y    = ThereExists x p
     | otherwise = ThereExists x (substitute y f p)
+
+-- Handles the rest
+substitute _ _ x = x
 
 -- Substitutes in terms
 subTerm :: String -> Term -> Term -> Term

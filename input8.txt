@@ -1,0 +1,10 @@
+A {alpha} (
+    E {beta} (
+        OR
+        (
+            PRED[related]( VAR[alpha] VAR[beta] )
+            NOT( PRED[related]( VAR[beta] VAR[alpha] ) )
+        )
+    )
+)
+

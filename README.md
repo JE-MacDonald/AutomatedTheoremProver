@@ -42,6 +42,7 @@ Input formatting:
 			There exists an x such that F. x is a variable and F is a formula.
 
 	Notes on Syntax:
+		Keywords are case sensitive.
 		Names are strictly strings of uppercase and lowercase alphabet characters.
 		Whitespace doesn't matter. Feel free to put newlines and spaces anywhere other than in the middle of a name or keyword string.
 		If your input is not well-formed, the program should fail with some error message.
