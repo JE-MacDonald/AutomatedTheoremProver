@@ -13,7 +13,7 @@ import Skolemize (skolemize)
 main :: IO ()
 main = do
     --First-order resolution
-    input <- readFile "input3.txt"
+    input <- readFile "input4.txt"
     case inputStringToFormula input of
         Left e -> putStrLn(MP.errorBundlePretty e)
         Right formula -> do 
