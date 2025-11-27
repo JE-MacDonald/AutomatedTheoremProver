@@ -46,6 +46,9 @@ Input formatting:
 		Names are strictly strings of uppercase and lowercase alphabet characters.
 		Whitespace doesn't matter. Feel free to put newlines and spaces anywhere other than in the middle of a name or keyword string.
 		If your input is not well-formed, the program should fail with some error message.
+		To actually run the program, provide as a command line argument the path to the input .txt file.
+		If using cabal, execute the following command:
+			cabal run AutomatedTheoremProver -- inputpathhere
 
 	Example input:
 		IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) )
