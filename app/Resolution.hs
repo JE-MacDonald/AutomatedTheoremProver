@@ -10,7 +10,6 @@ import Data.Set (Set)
 
 import Datatypes
 
-type Subst = Map String Term
 
 resolution :: ClausalForm -> Bool
 resolution _ = True

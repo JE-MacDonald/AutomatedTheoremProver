@@ -1,5 +1,7 @@
 module Datatypes where
 
+import Data.Map (Map)
+
 data Term
     = Variable String
     | Object String
@@ -26,6 +28,8 @@ data Literal
     deriving (Eq, Ord, Show)
 type Clause = [Literal]
 type ClausalForm = [Clause]
+
+type Subst = Maybe (Map String Term)
 
 -- Neater prints, not required though
 instance Show Term where
