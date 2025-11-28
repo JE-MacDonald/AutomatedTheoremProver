@@ -1,0 +1,12 @@
+A{x} (
+
+IMPLIES (
+ 	PRED[x]()
+	AND(
+		PRED[x]()
+		PRED[x]()
+)
+
+)
+
+)

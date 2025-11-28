@@ -1,0 +1,13 @@
+A{x} (A{y} (
+
+IMPLIES (
+
+	NOT (
+
+		OR (PRED[x]() PRED[y]())
+	
+)
+ 	AND (NOT (PRED[x]()) NOT(PRED[y]()))
+
+
+) ) )

@@ -1,0 +1,11 @@
+A{z} (A{x} (A{y} (
+IMPLIES (
+
+	AND (
+		IMPLIES ( PRED[x]() PRED[y]() )
+ 		IMPLIES ( PRED[y]() PRED[z]() )
+	)
+
+	IMPLIES (PRED[x]() PRED[z]())
+)
+) ) )
