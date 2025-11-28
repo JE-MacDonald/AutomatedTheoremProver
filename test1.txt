@@ -1,1 +1,0 @@
-AND( E{z}(NOT(PRED[prede](VAR[z]))) AND( A{x}( AND( PRED[preda](VAR[x]) A{x}( A{y}( PRED[predb](VAR[x] VAR[y] FUNC[fa](VAR[y] VAR[x]) ) ) ) ) ) AND( OR( A{x}( PRED[predc](VAR[x]) ) PRED[predf](VAR[x]) ) A{x}( OR( PRED[predd](VAR[x]) PRED[predg](VAR[x]) ) ) ) ) )
