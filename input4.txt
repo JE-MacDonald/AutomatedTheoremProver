@@ -1,0 +1,7 @@
+A {x} (
+    IMPLIES
+    (
+        PRED[areFriends]( VAR[x] OBJ[Bob] )
+        PRED[areFriends]( VAR[x] OBJ[Bob] )
+    )
+)
