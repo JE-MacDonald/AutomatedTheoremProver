@@ -1,4 +1,4 @@
-A{x} (A{y} (
+
 
 IMPLIES (
 
@@ -11,4 +11,4 @@ IMPLIES (
  	PRED[y]()
 
 
-) ) )
+)

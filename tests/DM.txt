@@ -1,4 +1,4 @@
-A{x} (A{y} (
+
 
 IMPLIES (
 
@@ -10,4 +10,4 @@ IMPLIES (
  	AND (NOT (PRED[x]()) NOT(PRED[y]()))
 
 
-) ) )
+) 

@@ -1,4 +1,4 @@
-A{x} (
+
 
 IMPLIES (
  	PRED[x]()
@@ -9,4 +9,3 @@ IMPLIES (
 
 )
 
-)
