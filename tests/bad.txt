@@ -1,0 +1,8 @@
+A{x}(A{y}(
+
+AND (
+
+    OR (PRED[p](VAR[x]) PRED[p](VAR[y]))
+    OR (NOT (PRED[p](OBJ[a])) NOT (PRED[p](OBJ[b])))
+
+)))
