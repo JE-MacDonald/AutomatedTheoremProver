@@ -1,4 +1,4 @@
-A{x}(A{y}(
+NOT(A{x}(A{y}(
 
 AND (
 
@@ -6,3 +6,5 @@ AND (
     OR (NOT (PRED[p](OBJ[a])) NOT (PRED[p](OBJ[b])))
 
 )))
+
+)
