@@ -7,7 +7,7 @@ Input:
 Output: 
 
 	If F is valid, VALID.
-	If F is invalid, the program may terminate or run forever.
+	If F is invalid, the program may terminate with INVALID or run forever.
 
 Input formatting:
 
@@ -45,10 +45,10 @@ Input formatting:
 		Keywords are case sensitive.
 		Names are strictly strings of uppercase and lowercase alphabet characters.
 		Whitespace doesn't matter. Feel free to put newlines and spaces anywhere other than in the middle of a name or keyword string.
-		If your input is not well-formed, the program should fail with some error message.
-		To actually run the program, provide as a command line argument the path to the input .txt file.
+		If your input is not well-formed, the program will hopefully fail with some error message.
+		To actually run the program, provide as a command line argument the path to the input text file.
 		If using cabal, execute the following command:
-			cabal run AutomatedTheoremProver -- inputpathhere
+			cabal run AutomatedTheoremProver inputFilePath
 
 	Example input:
 		IMPLIES( A{person}( PRED[areFriends](VAR[person] OBJ[Bob]) ) E{j}( PRED[areFriends]( VAR[j] OBJ[Bob] ) ) )

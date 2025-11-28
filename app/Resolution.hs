@@ -5,6 +5,7 @@ import MGU (mgu)
 import qualified Data.Map as Map
 import Data.List (nub, sort, find)
 import Data.Maybe (isJust)
+import Debug.Trace (trace)
 
 -- Given the list of clauses in clausal form, do resolution logic.
 -- Start by ensuring variables are distinct across clauses.
@@ -28,6 +29,7 @@ search clauses =
     newClauses = filter (not . isTautology) resolvents
     novel = filter (`notElem` clauses) newClauses
   in
+    trace (unlines (map show novel)) $    --COMMENT OUT IF YOU DONT WANT TO SEE RESOLVENTS
     any null newClauses || (not (null novel) && search (clauses ++ novel))
 
 -- Generates all distinct pairs of elements from a list. ie. [1,2,3] -> [(1,2),(1,3),(2,3)].
