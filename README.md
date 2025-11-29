@@ -58,3 +58,5 @@ Input formatting:
 		
 		For other systems, the project needs to be compiled. We suggest using Cabal. From your shell, navigate to \AutomatedTheoremProver and enter the following to build and run:
 			cabal run AutomatedTheoremProver -- [Input File Path]
+
+ 		Plenty of example input files can be found in \tests.
