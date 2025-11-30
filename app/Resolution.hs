@@ -3,9 +3,11 @@ module Resolution (resolution) where
 import Datatypes
 import MGU (mgu)
 import qualified Data.Map as Map
-import Data.List (nub, sort, find)
+import Data.List (nub, sort, find, delete)
 import Data.Maybe (isJust)
 import Debug.Trace (trace)
+import qualified Data.Set as Set
+type ClauseSet = Set.Set Clause
 
 -- Given the list of clauses in clausal form, do resolution logic.
 -- Start by ensuring variables are distinct across clauses.
@@ -18,19 +20,20 @@ import Debug.Trace (trace)
 -- If no empty clause could be found or all possibilities exhausted, returns False ("Invalid!" in Main.hs)
 -- Because resolution is refutation-complete and not decidable, program may run/loop forever. This is expected.
 resolution :: ClausalForm -> Bool
-resolution clausalform = search cleanedclauses
+resolution clausalform = search cleanedclauses Set.empty
   where cleanedclauses = removeTautologies (map factorClause (standardizeAll clausalform))
 
 -- search repeatedly applies resolution until either the empty clause is found or no new clauses can be generated
-search :: ClausalForm -> Bool
-search clauses =
+search :: ClausalForm -> ClauseSet -> Bool
+search clauses setOfProcessedClauses =
   let
-    resolvents = nub (concat [ resolvePair c1 c2 | (c1, c2) <- distinctPairs clauses ])
+    resolvents = nub (concat [ resolvePair c1 c2 | (c1, c2) <- distinctPairs clauses, not (Set.member c1 setOfProcessedClauses && Set.member c2 setOfProcessedClauses) ])
     newClauses = filter (not . isTautology) resolvents
     novel = filter (`notElem` clauses) newClauses
+    newProcessedClauses = setOfProcessedClauses `Set.union` Set.fromList clauses
   in
     --trace (unlines (map show novel)) $    --COMMENT OUT IF YOU DONT WANT TO SEE RESOLVENTS
-    any null newClauses || (not (null novel) && search (clauses ++ novel))
+    any null newClauses || (not (null novel) && search (clauses ++ novel) newProcessedClauses)
 
 -- Generates all distinct pairs of elements from a list. ie. [1,2,3] -> [(1,2),(1,3),(2,3)].
 -- This is to ensure that we don't accidentally resolve a clause with itself. The resolution rule must take a positive literal from a clause and a negative literal from a different clause.
@@ -60,18 +63,12 @@ renameTerm _ term = term
 -- Tries to resolve two clauses by finding complementary literals that unify, removing them, applying the substitution, and returning the new resolvent(s).
 resolvePair :: Clause -> Clause -> [Clause]
 resolvePair c1 c2 = concatMap tryResolve [(l, m) | l <- c1, m <- c2]
-  where tryResolve (l, m) =
-         case mgu l m of
-         Just subst | isComplementary l m -> [ factorClause (normalizeClause (applyClause subst (remove l c1 ++ remove m c2))) ]
-         _ -> []
-
--- Remove the first x that we find in the list. ie. x=3 in [1,2,3,4] => [1,2,4]. Works for inferred data types.
-remove :: Eq a => a -> [a] -> [a]
-remove x list = case list of
-  [] -> []
-  (l1:ls) -> if x == l1
-              then ls
-              else l1 : remove x ls
+  where tryResolve (l, m)
+          | isComplementary l m =
+              case mgu l m of
+                Just subst -> [ factorClause (normalizeClause (applyClause subst (delete l c1 ++ delete m c2))) ]
+                Nothing    -> []
+          | otherwise = []
 
 -- Mainly removes duplicates but also sorts.
 normalizeClause :: Clause -> Clause
@@ -104,7 +101,7 @@ removeTautologies clauses = [clause | clause <- clauses, not (isTautology clause
 
 -- A clause is a tautology if any pair of literals in the clause is complementary and unifiable.
 isTautology :: Clause -> Bool
-isTautology clause = any (\(l1, l2) -> isComplementary l1 l2 && isJust (mgu l1 l2)) [ (l1, l2) | l1 <- clause, l2 <- clause ]
+isTautology clause = any (\(l1, l2) -> l1 /= l2 && isComplementary l1 l2 && isJust (mgu l1 l2)) [ (l1, l2) | l1 <- clause, l2 <- clause ]
 
 -- Returns true when two literals share the same name and have opposite sign: This means that if they are unifiable, then they are a tautology.
 isComplementary :: Literal -> Literal -> Bool
