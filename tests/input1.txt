@@ -1,0 +1,9 @@
+IMPLIES
+(
+	NOT (IMPLIES (PRED[x]() PRED[y]()))
+	AND(
+		PRED[x]()
+		NOT (PRED[y]())
+)
+
+)
