@@ -29,6 +29,7 @@ data Literal
 type Clause = [Literal]
 type ClausalForm = [Clause]
 
+--substitution type for MGU.hs
 type Subst = Maybe (Map String Term)
 
 -- Neater prints, not required though
