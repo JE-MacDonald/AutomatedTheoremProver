@@ -37,9 +37,9 @@ Input formatting:
 		IFF(F G)
 			Logical (F iff G). F and G are Formulas.
 		A{x}(F)
-			For all x, F. x is a variable and F is a formula.
+			For all x, F. x is the name of a variable and F is a formula.
 		E{x}(F)
-			There exists an x such that F. x is a variable and F is a formula.
+			There exists an x such that F. x is the name of a variable and F is a formula.
 
 	Notes on syntax:
 		Keywords are case sensitive.
