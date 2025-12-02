@@ -71,7 +71,7 @@ tseitinRec f qvars (minName, maxName) =
         And x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
             let (nx, tx, cx) = tseitinRec x qvars (minName+1, mid) in
-            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName - 1) in
+            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
             (name, qvars, toCNF (Iff (Predicate name qvars) (And p q) ) ++ cx ++ cy)
@@ -79,7 +79,7 @@ tseitinRec f qvars (minName, maxName) =
         Or x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
             let (nx, tx, cx) = tseitinRec x qvars (minName+1, mid) in
-            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName - 1) in
+            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
             (name, qvars, toCNF (Iff (Predicate name qvars) (Or p q) ) ++ cx ++ cy)
@@ -92,7 +92,7 @@ tseitinRec f qvars (minName, maxName) =
         Implies x y -> 
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
             let (nx, tx, cx) = tseitinRec x qvars (minName+1, mid) in
-            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName - 1) in
+            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
             (name, qvars, toCNF (Iff (Predicate name qvars) (Implies p q) ) ++ cx ++ cy)
@@ -100,7 +100,7 @@ tseitinRec f qvars (minName, maxName) =
         Iff x y ->
             let mid = minName + Bit.shiftR (maxName - minName) 1 in
             let (nx, tx, cx) = tseitinRec x qvars (minName+1, mid) in
-            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName - 1) in
+            let (ny, ty, cy) = tseitinRec y qvars (mid+1, maxName) in
             let p = Predicate nx tx in
             let q = Predicate ny ty in
             (name, qvars, toCNF (Iff (Predicate name qvars) (Iff p q) ) ++ cx ++ cy )
