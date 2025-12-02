@@ -6,8 +6,8 @@ Input:
 
 Output: 
 
-	If F is valid, VALID.
-	If F is invalid, the program may terminate with INVALID or run forever.
+	If F is valid, "Valid!".
+	If F is invalid, the program may terminate with "Invalid!" or run forever.
 
 Input formatting:
 
